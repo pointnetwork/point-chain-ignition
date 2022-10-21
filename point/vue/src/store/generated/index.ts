@@ -1,8 +1,10 @@
 // THIS FILE IS GENERATED AUTOMATICALLY. DO NOT MODIFY.
 
+import PointLockenomics from './point.lockenomics'
 
 
 export default { 
+  PointLockenomics: load(PointLockenomics, 'point.lockenomics'),
   
 }
 

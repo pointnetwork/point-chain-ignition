@@ -1,0 +1,12 @@
+syntax = "proto3";
+package point.lockenomics;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "point/x/lockenomics/types";
+
+// Params defines the parameters for the module.
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+  
+}
