@@ -7,7 +7,17 @@ option go_package = "point/x/lockenomics/types";
 
 // Msg defines the Msg service.
 service Msg {
-    // this line is used by starport scaffolding # proto/tx/rpc
+      rpc CreateLock(MsgCreateLock) returns (MsgCreateLockResponse);
+// this line is used by starport scaffolding # proto/tx/rpc
+}
+
+message MsgCreateLock {
+  string creator = 1;
+  int32 lenght = 2;
+  string validator = 3;
+}
+
+message MsgCreateLockResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message
