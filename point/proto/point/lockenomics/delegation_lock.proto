@@ -1,0 +1,14 @@
+syntax = "proto3";
+package point.lockenomics;
+
+option go_package = "point/x/lockenomics/types";
+
+message DelegationLock {
+  string index = 1; 
+  int32 start = 2; 
+  int32 length = 3; 
+  string delegator = 4; 
+  string validator = 5; 
+  
+}
+
