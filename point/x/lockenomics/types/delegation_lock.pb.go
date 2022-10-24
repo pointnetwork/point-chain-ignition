@@ -9,6 +9,7 @@ import (
 	io "io"
 	math "math"
 	math_bits "math/bits"
+	"time"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -24,7 +25,7 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type DelegationLock struct {
 	Index     string `protobuf:"bytes,1,opt,name=index,proto3" json:"index,omitempty"`
-	Start     int32  `protobuf:"varint,2,opt,name=start,proto3" json:"start,omitempty"`
+	Start     *time.Time  `protobuf:"bytes,2,opt,name=start,proto3,stdtime" json:"start,omitempty"`
 	Length    int32  `protobuf:"varint,3,opt,name=length,proto3" json:"length,omitempty"`
 	Delegator string `protobuf:"bytes,4,opt,name=delegator,proto3" json:"delegator,omitempty"`
 	Validator string `protobuf:"bytes,5,opt,name=validator,proto3" json:"validator,omitempty"`

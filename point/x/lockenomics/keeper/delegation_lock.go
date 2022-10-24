@@ -3,16 +3,23 @@ package keeper
 import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	stakingTypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"point/x/lockenomics/types"
 )
 
 // SetDelegationLock set a specific delegationLock in the store from its index
 func (k Keeper) SetDelegationLock(ctx sdk.Context, delegationLock types.DelegationLock) {
+
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.DelegationLockKeyPrefix))
 	b := k.cdc.MustMarshal(&delegationLock)
-	store.Set(types.DelegationLockKey(
-		delegationLock.Index,
-	), b)
+	delegatorAddress := sdk.MustAccAddressFromBech32(delegationLock.Delegator)
+	validatorAddress, err := sdk.ValAddressFromBech32(delegationLock.Validator)
+	if err != nil {
+		panic(err)
+	}
+
+	key := stakingTypes.GetDelegationKey(delegatorAddress, validatorAddress)
+	store.Set(key, b)
 }
 
 // GetDelegationLock returns a delegationLock from its index
