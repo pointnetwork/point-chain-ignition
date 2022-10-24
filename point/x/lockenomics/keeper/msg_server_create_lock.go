@@ -21,7 +21,7 @@ func (k msgServer) CreateLock(goCtx context.Context, msg *types.MsgCreateLock) (
 	}
 
 	delegationLock := types.DelegationLock{
-		Start:     ,
+		Start:     12345,
 		Length:    msg.Lenght,
 		Delegator: msg.Creator,
 		Validator: msg.Validator,
