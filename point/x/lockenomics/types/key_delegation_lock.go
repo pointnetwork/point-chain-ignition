@@ -13,19 +13,6 @@ const (
 	DelegationLockKeyPrefix = "DelegationLock/value/"
 )
 
-// DelegationLockKey returns the store key to retrieve a DelegationLock from the index fields
-func DelegationLockIndexKey(
-	index string,
-) []byte {
-	var key []byte
-
-	indexBytes := []byte(index)
-	key = append(key, indexBytes...)
-	key = append(key, []byte("/")...)
-
-	return key
-}
-
 // GetDelegationKey creates the key for delegator bond with validator
 // VALUE: staking/Delegation
 func GetDelegationLockKey(delAddr sdk.AccAddress, valAddr sdk.ValAddress) []byte {

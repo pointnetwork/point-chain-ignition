@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	"encoding/hex"
 	"strconv"
 	"testing"
 	"time"
@@ -18,10 +19,17 @@ var _ = strconv.IntSize
 
 func createNDelegationLock(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.DelegationLock {
 	items := make([]types.DelegationLock, n)
+	delegators := [2]string{"cosmos156gqf9837u7d4c4678yt3rl4ls9c5vuuxyhkw6",
+		"cosmos14lultfckehtszvzw4ehu0apvsr77afvyhgqhwh"}
+	validators := [2]string{"cosmosvaloper156gqf9837u7d4c4678yt3rl4ls9c5vuursrrzf",
+		"cosmosvaloper14lultfckehtszvzw4ehu0apvsr77afvyju5zzy"}
 	for i := range items {
-		items[i].Index = strconv.Itoa(i)
-		items[i].Delegator = "cosmos156gqf9837u7d4c4678yt3rl4ls9c5vuuxyhkw6"
-		items[i].Validator = "cosmosvaloper156gqf9837u7d4c4678yt3rl4ls9c5vuursrrzf"
+		delegAddr, _ := sdk.AccAddressFromBech32(delegators[i])
+		valAddr, _ := sdk.ValAddressFromBech32(validators[i])
+		key := types.GetDelegationLockKey(delegAddr, valAddr)
+		items[i].Index = hex.EncodeToString(key)
+		items[i].Delegator = delegators[i]
+		items[i].Validator = validators[i]
 		items[i].Start = uint64(time.Now().Unix())
 		items[i].Length = 50000000
 		keeper.SetDelegationLock(ctx, items[i])
@@ -31,7 +39,7 @@ func createNDelegationLock(keeper *keeper.Keeper, ctx sdk.Context, n int) []type
 
 func TestDelegationLockGet(t *testing.T) {
 	keeper, ctx := keepertest.LockenomicsKeeper(t)
-	items := createNDelegationLock(keeper, ctx, 1)
+	items := createNDelegationLock(keeper, ctx, 2)
 	for _, item := range items {
 		delegatorAddress := sdk.MustAccAddressFromBech32(item.Delegator)
 		validatorAddress, _ := sdk.ValAddressFromBech32(item.Validator)
@@ -49,7 +57,7 @@ func TestDelegationLockGet(t *testing.T) {
 }
 func TestDelegationLockRemove(t *testing.T) {
 	keeper, ctx := keepertest.LockenomicsKeeper(t)
-	items := createNDelegationLock(keeper, ctx, 10)
+	items := createNDelegationLock(keeper, ctx, 2)
 	for _, item := range items {
 		keeper.RemoveDelegationLock(ctx,
 			item.Index,
@@ -63,7 +71,7 @@ func TestDelegationLockRemove(t *testing.T) {
 
 func TestDelegationLockGetAll(t *testing.T) {
 	keeper, ctx := keepertest.LockenomicsKeeper(t)
-	items := createNDelegationLock(keeper, ctx, 10)
+	items := createNDelegationLock(keeper, ctx, 2)
 	require.ElementsMatch(t,
 		nullify.Fill(items),
 		nullify.Fill(keeper.GetAllDelegationLock(ctx)),

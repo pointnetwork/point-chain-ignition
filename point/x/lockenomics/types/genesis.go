@@ -1,6 +1,7 @@
 package types
 
 import (
+	"encoding/hex"
 	"fmt"
 )
 
@@ -23,7 +24,8 @@ func (gs GenesisState) Validate() error {
 	delegationLockIndexMap := make(map[string]struct{})
 
 	for _, elem := range gs.DelegationLockList {
-		index := string(DelegationLockIndexKey(elem.Index))
+		byteIndex, _ := hex.DecodeString(elem.Index)
+		index := string(byteIndex)
 		if _, ok := delegationLockIndexMap[index]; ok {
 			return fmt.Errorf("duplicated index for delegationLock")
 		}

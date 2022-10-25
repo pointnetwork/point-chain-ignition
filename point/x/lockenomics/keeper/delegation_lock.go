@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"encoding/hex"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"point/x/lockenomics/types"
@@ -43,10 +44,8 @@ func (k Keeper) GetDelegationLock(
 
 ) (val types.DelegationLock, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.DelegationLockKeyPrefix))
-
-	b := store.Get(types.DelegationLockIndexKey(
-		index,
-	))
+	byteIndex, _ := hex.DecodeString(index)
+	b := store.Get(byteIndex)
 	if b == nil {
 		return val, false
 	}
@@ -62,9 +61,8 @@ func (k Keeper) RemoveDelegationLock(
 
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.DelegationLockKeyPrefix))
-	store.Delete(types.DelegationLockIndexKey(
-		index,
-	))
+	byteIndex, _ := hex.DecodeString(index)
+	store.Delete(byteIndex)
 }
 
 // GetAllDelegationLock returns all delegationLock
