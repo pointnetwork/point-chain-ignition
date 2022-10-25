@@ -2,6 +2,7 @@ package lockenomics_test
 
 import (
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/require"
 	keepertest "point/testutil/keeper"
@@ -16,10 +17,18 @@ func TestGenesis(t *testing.T) {
 
 		DelegationLockList: []types.DelegationLock{
 			{
-				Index: "0",
+				Index:     "0",
+				Start:     uint64(time.Now().Unix()),
+				Length:    123534234,
+				Delegator: "cosmos1sjllsnramtg3ewxqwwrwjxfgc4n4ef9u0tvx7u",
+				Validator: "cosmosvaloper1sjllsnramtg3ewxqwwrwjxfgc4n4ef9u2lcnj0",
 			},
 			{
-				Index: "1",
+				Index:     "1",
+				Start:     uint64(time.Now().Unix()),
+				Length:    756356987,
+				Delegator: "cosmos14lultfckehtszvzw4ehu0apvsr77afvyhgqhwh",
+				Validator: "cosmosvaloper14lultfckehtszvzw4ehu0apvsr77afvyju5zzy",
 			},
 		},
 		// this line is used by starport scaffolding # genesis/test/state
