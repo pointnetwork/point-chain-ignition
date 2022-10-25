@@ -23,7 +23,7 @@ func (gs GenesisState) Validate() error {
 	delegationLockIndexMap := make(map[string]struct{})
 
 	for _, elem := range gs.DelegationLockList {
-		index := string(DelegationLockKey(elem.Index))
+		index := string(DelegationLockIndexKey(elem.Index))
 		if _, ok := delegationLockIndexMap[index]; ok {
 			return fmt.Errorf("duplicated index for delegationLock")
 		}

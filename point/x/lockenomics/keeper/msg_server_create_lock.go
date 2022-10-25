@@ -26,17 +26,15 @@ func (k msgServer) CreateLock(goCtx context.Context, msg *types.MsgCreateLock) (
 		return nil, err
 	}
 
-	var UINT64_MAX int64 = 18446744073709551615
-	var UINT64_MIN int64 = 0
-
 	now := time.Now().Unix()
 
-	if now > UINT64_MAX || now < UINT64_MIN {
+	if now < 0 {
 		return nil, types.ErrIntOverflowDelegationLock
 	}
 	nowUint := uint64(now)
 	lenghtInt64 := int64(msg.Lenght)
-	if lenghtInt64 > UINT64_MAX || lenghtInt64 < UINT64_MIN {
+
+	if lenghtInt64 < 0 {
 		return nil, types.ErrIntOverflowParams
 	}
 	lengthUint := uint64(msg.Lenght)

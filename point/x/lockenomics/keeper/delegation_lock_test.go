@@ -3,6 +3,7 @@ package keeper_test
 import (
 	"strconv"
 	"testing"
+	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
@@ -19,7 +20,10 @@ func createNDelegationLock(keeper *keeper.Keeper, ctx sdk.Context, n int) []type
 	items := make([]types.DelegationLock, n)
 	for i := range items {
 		items[i].Index = strconv.Itoa(i)
-
+		items[i].Delegator = "cosmos156gqf9837u7d4c4678yt3rl4ls9c5vuuxyhkw6"
+		items[i].Validator = "cosmosvaloper156gqf9837u7d4c4678yt3rl4ls9c5vuursrrzf"
+		items[i].Start = uint64(time.Now().Unix())
+		items[i].Length = 50000000
 		keeper.SetDelegationLock(ctx, items[i])
 	}
 	return items
@@ -27,10 +31,14 @@ func createNDelegationLock(keeper *keeper.Keeper, ctx sdk.Context, n int) []type
 
 func TestDelegationLockGet(t *testing.T) {
 	keeper, ctx := keepertest.LockenomicsKeeper(t)
-	items := createNDelegationLock(keeper, ctx, 10)
+	items := createNDelegationLock(keeper, ctx, 1)
 	for _, item := range items {
-		rst, found := keeper.GetDelegationLock(ctx,
-			item.Index,
+		delegatorAddress := sdk.MustAccAddressFromBech32(item.Delegator)
+		validatorAddress, _ := sdk.ValAddressFromBech32(item.Validator)
+
+		rst, found := keeper.GetDelegationLockByDelegatorAndValidator(ctx,
+			delegatorAddress,
+			validatorAddress,
 		)
 		require.True(t, found)
 		require.Equal(t,

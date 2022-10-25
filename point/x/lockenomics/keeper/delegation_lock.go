@@ -19,6 +19,23 @@ func (k Keeper) SetDelegationLock(ctx sdk.Context, delegationLock types.Delegati
 	store.Set(key, b)
 }
 
+// GetDelegationLock returns a delegationLock by Delegator And Validator
+func (k Keeper) GetDelegationLockByDelegatorAndValidator(
+	ctx sdk.Context,
+	delegator sdk.AccAddress,
+	validator sdk.ValAddress,
+) (val types.DelegationLock, found bool) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.DelegationLockKeyPrefix))
+	key := types.GetDelegationLockKey(delegator, validator)
+	b := store.Get(key)
+	if b == nil {
+		return val, false
+	}
+
+	k.cdc.MustUnmarshal(b, &val)
+	return val, true
+}
+
 // GetDelegationLock returns a delegationLock from its index
 func (k Keeper) GetDelegationLock(
 	ctx sdk.Context,
@@ -27,7 +44,7 @@ func (k Keeper) GetDelegationLock(
 ) (val types.DelegationLock, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.DelegationLockKeyPrefix))
 
-	b := store.Get(types.DelegationLockKey(
+	b := store.Get(types.DelegationLockIndexKey(
 		index,
 	))
 	if b == nil {
@@ -45,7 +62,7 @@ func (k Keeper) RemoveDelegationLock(
 
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.DelegationLockKeyPrefix))
-	store.Delete(types.DelegationLockKey(
+	store.Delete(types.DelegationLockIndexKey(
 		index,
 	))
 }
