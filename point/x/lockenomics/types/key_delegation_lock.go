@@ -13,6 +13,11 @@ const (
 	DelegationLockKeyPrefix = "DelegationLock/value/"
 )
 
+/* TODO Create function to make a bytes index from string indes and a function to make a string index to bytes index.
+ it is actually hex.DecodeString(indexString), hex.EncodeToString(indesBytes), so we don't have a logic duplication everywhere
+*/
+ */
+
 // GetDelegationKey creates the key for delegator bond with validator
 // VALUE: staking/Delegation
 func GetDelegationLockKey(delAddr sdk.AccAddress, valAddr sdk.ValAddress) []byte {
