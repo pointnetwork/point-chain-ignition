@@ -258,6 +258,7 @@ func skipParams(dAtA []byte) (n int, err error) {
 
 var (
 	ErrInvalidLengthParams        = fmt.Errorf("proto: negative length found during unmarshaling")
+	ErrInvalidStartParams         = fmt.Errorf("proto: Invalid start parameter value")
 	ErrIntOverflowParams          = fmt.Errorf("proto: integer overflow")
 	ErrUnexpectedEndOfGroupParams = fmt.Errorf("proto: unexpected end of group")
 )
