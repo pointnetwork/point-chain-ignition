@@ -1,9 +1,12 @@
 package cli_test
 
 import (
+	"encoding/hex"
 	"fmt"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"strconv"
 	"testing"
+	"time"
 
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
@@ -27,9 +30,38 @@ func networkWithDelegationLockObjects(t *testing.T, n int) (*network.Network, []
 	state := types.GenesisState{}
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
+	delegators := [7]string{"cosmos156gqf9837u7d4c4678yt3rl4ls9c5vuuxyhkw6",
+		"cosmos14lultfckehtszvzw4ehu0apvsr77afvyhgqhwh",
+		"cosmos19lss6zgdh5vvcpjhfftdghrpsw7a4434ut4md0",
+		"cosmos196ax4vc0lwpxndu9dyhvca7jhxp70rmcfhxsrt",
+		"cosmos1z8zjv3lntpwxua0rtpvgrcwl0nm0tltgyuy0nd",
+		"cosmos1qaa9zej9a0ge3ugpx3pxyx602lxh3ztqda85ee",
+		"cosmos1tflk30mq5vgqjdly92kkhhq3raev2hnzldd74z",
+	}
+	validators := [7]string{"cosmosvaloper156gqf9837u7d4c4678yt3rl4ls9c5vuursrrzf",
+		"cosmosvaloper14lultfckehtszvzw4ehu0apvsr77afvyju5zzy",
+		"cosmosvaloper19lss6zgdh5vvcpjhfftdghrpsw7a4434elpwpu",
+		"cosmosvaloper196ax4vc0lwpxndu9dyhvca7jhxp70rmcvrj90c",
+		"cosmosvaloper1z8zjv3lntpwxua0rtpvgrcwl0nm0tltgpgs6l7",
+		"cosmosvaloper1qaa9zej9a0ge3ugpx3pxyx602lxh3ztqgfnp42",
+		"cosmosvaloper1tflk30mq5vgqjdly92kkhhq3raev2hnz6eete3",
+	}
+
+	indexes := [len(delegators)]string{}
+	for i := 0; i < len(delegators); i++ {
+		delegator, _ := sdk.AccAddressFromBech32(delegators[i])
+		validator, _ := sdk.ValAddressFromBech32(validators[i])
+		keyBytes := types.GetDelegationLockKey(delegator, validator)
+		indexes[i] = hex.EncodeToString(keyBytes)
+	}
+
 	for i := 0; i < n; i++ {
 		delegationLock := types.DelegationLock{
-			Index: strconv.Itoa(i),
+			Index:     indexes[i],
+			Start:     uint64(time.Now().Unix()),
+			Length:    12978,
+			Delegator: delegators[i],
+			Validator: validators[i],
 		}
 		nullify.Fill(&delegationLock)
 		state.DelegationLockList = append(state.DelegationLockList, delegationLock)
