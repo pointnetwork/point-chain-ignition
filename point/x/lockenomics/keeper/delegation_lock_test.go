@@ -19,10 +19,22 @@ var _ = strconv.IntSize
 
 func createNDelegationLock(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.DelegationLock {
 	items := make([]types.DelegationLock, n)
-	delegators := [2]string{"cosmos156gqf9837u7d4c4678yt3rl4ls9c5vuuxyhkw6",
-		"cosmos14lultfckehtszvzw4ehu0apvsr77afvyhgqhwh"}
-	validators := [2]string{"cosmosvaloper156gqf9837u7d4c4678yt3rl4ls9c5vuursrrzf",
-		"cosmosvaloper14lultfckehtszvzw4ehu0apvsr77afvyju5zzy"}
+	delegators := [7]string{"cosmos156gqf9837u7d4c4678yt3rl4ls9c5vuuxyhkw6",
+		"cosmos14lultfckehtszvzw4ehu0apvsr77afvyhgqhwh",
+		"cosmos19lss6zgdh5vvcpjhfftdghrpsw7a4434ut4md0",
+		"cosmos196ax4vc0lwpxndu9dyhvca7jhxp70rmcfhxsrt",
+		"cosmos1z8zjv3lntpwxua0rtpvgrcwl0nm0tltgyuy0nd",
+		"cosmos1qaa9zej9a0ge3ugpx3pxyx602lxh3ztqda85ee",
+		"cosmos1tflk30mq5vgqjdly92kkhhq3raev2hnzldd74z",
+	}
+	validators := [7]string{"cosmosvaloper156gqf9837u7d4c4678yt3rl4ls9c5vuursrrzf",
+		"cosmosvaloper14lultfckehtszvzw4ehu0apvsr77afvyju5zzy",
+		"cosmosvaloper19lss6zgdh5vvcpjhfftdghrpsw7a4434elpwpu",
+		"cosmosvaloper196ax4vc0lwpxndu9dyhvca7jhxp70rmcvrj90c",
+		"cosmosvaloper1z8zjv3lntpwxua0rtpvgrcwl0nm0tltgpgs6l7",
+		"cosmosvaloper1qaa9zej9a0ge3ugpx3pxyx602lxh3ztqgfnp42",
+		"cosmosvaloper1tflk30mq5vgqjdly92kkhhq3raev2hnz6eete3",
+	}
 	for i := range items {
 		delegAddr, _ := sdk.AccAddressFromBech32(delegators[i])
 		valAddr, _ := sdk.ValAddressFromBech32(validators[i])
