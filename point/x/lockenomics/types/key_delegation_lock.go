@@ -20,10 +20,10 @@ it is actually hex.DecodeString(indexString), hex.EncodeToString(indesBytes), so
 // GetDelegationKey creates the key for delegator bond with validator
 // VALUE: staking/Delegation
 func GetDelegationLockKey(delAddr sdk.AccAddress, valAddr sdk.ValAddress) []byte {
-	return append(GetDelegationsLockKey(delAddr), address.MustLengthPrefix(valAddr)...)
+	return append(GetDelegationsLockDelAddrKey(delAddr), address.MustLengthPrefix(valAddr)...)
 }
 
 // GetDelegationsKey creates the prefix for a delegator for all validators
-func GetDelegationsLockKey(delAddr sdk.AccAddress) []byte {
+func GetDelegationsLockDelAddrKey(delAddr sdk.AccAddress) []byte {
 	return append(KeyPrefix(DelegationLockKeyPrefix), address.MustLengthPrefix(delAddr)...)
 }

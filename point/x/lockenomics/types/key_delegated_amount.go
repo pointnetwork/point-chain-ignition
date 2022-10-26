@@ -1,6 +1,10 @@
 package types
 
-import "encoding/binary"
+import (
+	"encoding/binary"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/address"
+)
 
 var _ binary.ByteOrder
 
@@ -20,4 +24,28 @@ func DelegatedAmountKey(
 	key = append(key, []byte("/")...)
 
 	return key
+}
+
+// GetDelegationKey creates the key for delegator bond with validator
+func GetDelegatedAmountKeyFromString(delegator string, validator string) (key []byte, err error) {
+	delAddr, err := sdk.AccAddressFromBech32(delegator)
+	if err != nil {
+		return nil, err
+	}
+	valAddr, err := sdk.ValAddressFromBech32(validator)
+	if err != nil {
+		return nil, err
+	}
+
+	return GetDelegatedAmountKey(delAddr, valAddr), nil
+}
+
+// GetDelegationKey creates the key for delegator bond with validator
+func GetDelegatedAmountKey(delAddr sdk.AccAddress, valAddr sdk.ValAddress) []byte {
+	return append(GetDelegatedAmountDelAddrKey(delAddr), address.MustLengthPrefix(valAddr)...)
+}
+
+// GetDelegationsKey creates the prefix for a delegator for all validators
+func GetDelegatedAmountDelAddrKey(delAddr sdk.AccAddress) []byte {
+	return append(KeyPrefix(DelegationLockKeyPrefix), address.MustLengthPrefix(delAddr)...)
 }
