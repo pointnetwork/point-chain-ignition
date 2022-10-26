@@ -28,6 +28,18 @@ const (
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgCreateLock int = 100
 
+	opWeightMsgCreateDelegatedAmount = "op_weight_msg_delegated_amount"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgCreateDelegatedAmount int = 100
+
+	opWeightMsgUpdateDelegatedAmount = "op_weight_msg_delegated_amount"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgUpdateDelegatedAmount int = 100
+
+	opWeightMsgDeleteDelegatedAmount = "op_weight_msg_delegated_amount"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgDeleteDelegatedAmount int = 100
+
 	// this line is used by starport scaffolding # simapp/module/const
 )
 
@@ -39,6 +51,16 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 	}
 	lockenomicsGenesis := types.GenesisState{
 		Params: types.DefaultParams(),
+		DelegatedAmountList: []types.DelegatedAmount{
+			{
+				Creator: sample.AccAddress(),
+				Index:   "0",
+			},
+			{
+				Creator: sample.AccAddress(),
+				Index:   "1",
+			},
+		},
 		// this line is used by starport scaffolding # simapp/module/genesisState
 	}
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&lockenomicsGenesis)
@@ -71,6 +93,39 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgCreateLock,
 		lockenomicssimulation.SimulateMsgCreateLock(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgCreateDelegatedAmount int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgCreateDelegatedAmount, &weightMsgCreateDelegatedAmount, nil,
+		func(_ *rand.Rand) {
+			weightMsgCreateDelegatedAmount = defaultWeightMsgCreateDelegatedAmount
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgCreateDelegatedAmount,
+		lockenomicssimulation.SimulateMsgCreateDelegatedAmount(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgUpdateDelegatedAmount int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgUpdateDelegatedAmount, &weightMsgUpdateDelegatedAmount, nil,
+		func(_ *rand.Rand) {
+			weightMsgUpdateDelegatedAmount = defaultWeightMsgUpdateDelegatedAmount
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgUpdateDelegatedAmount,
+		lockenomicssimulation.SimulateMsgUpdateDelegatedAmount(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgDeleteDelegatedAmount int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgDeleteDelegatedAmount, &weightMsgDeleteDelegatedAmount, nil,
+		func(_ *rand.Rand) {
+			weightMsgDeleteDelegatedAmount = defaultWeightMsgDeleteDelegatedAmount
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgDeleteDelegatedAmount,
+		lockenomicssimulation.SimulateMsgDeleteDelegatedAmount(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	// this line is used by starport scaffolding # simapp/module/operation

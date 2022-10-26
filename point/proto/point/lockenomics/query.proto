@@ -6,6 +6,7 @@ import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "point/lockenomics/params.proto";
 import "point/lockenomics/delegation_lock.proto";
+import "point/lockenomics/delegated_amount.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "point/x/lockenomics/types";
@@ -24,6 +25,16 @@ service Query {
 	// Queries a list of DelegationLock items.
 	rpc DelegationLockAll(QueryAllDelegationLockRequest) returns (QueryAllDelegationLockResponse) {
 		option (google.api.http).get = "/point/lockenomics/delegation_lock";
+	}
+
+// Queries a DelegatedAmount by index.
+	rpc DelegatedAmount(QueryGetDelegatedAmountRequest) returns (QueryGetDelegatedAmountResponse) {
+		option (google.api.http).get = "/point/lockenomics/delegated_amount/{index}";
+	}
+
+	// Queries a list of DelegatedAmount items.
+	rpc DelegatedAmountAll(QueryAllDelegatedAmountRequest) returns (QueryAllDelegatedAmountResponse) {
+		option (google.api.http).get = "/point/lockenomics/delegated_amount";
 	}
 
 // this line is used by starport scaffolding # 2
@@ -53,6 +64,24 @@ message QueryAllDelegationLockRequest {
 
 message QueryAllDelegationLockResponse {
 	repeated DelegationLock delegationLock = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetDelegatedAmountRequest {
+	  string index = 1;
+
+}
+
+message QueryGetDelegatedAmountResponse {
+	DelegatedAmount delegatedAmount = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllDelegatedAmountRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllDelegatedAmountResponse {
+	repeated DelegatedAmount delegatedAmount = 1 [(gogoproto.nullable) = false];
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 

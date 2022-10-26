@@ -1,5 +1,6 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
+import { DelegatedAmount } from "./delegated_amount";
 import { DelegationLock } from "./delegation_lock";
 import { Params } from "./params";
 
@@ -7,15 +8,14 @@ export const protobufPackage = "point.lockenomics";
 
 /** GenesisState defines the lockenomics module's genesis state. */
 export interface GenesisState {
-  params:
-    | Params
-    | undefined;
-  /** this line is used by starport scaffolding # genesis/proto/state */
+  params: Params | undefined;
   delegationLockList: DelegationLock[];
+  /** this line is used by starport scaffolding # genesis/proto/state */
+  delegatedAmountList: DelegatedAmount[];
 }
 
 function createBaseGenesisState(): GenesisState {
-  return { params: undefined, delegationLockList: [] };
+  return { params: undefined, delegationLockList: [], delegatedAmountList: [] };
 }
 
 export const GenesisState = {
@@ -25,6 +25,9 @@ export const GenesisState = {
     }
     for (const v of message.delegationLockList) {
       DelegationLock.encode(v!, writer.uint32(18).fork()).ldelim();
+    }
+    for (const v of message.delegatedAmountList) {
+      DelegatedAmount.encode(v!, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -42,6 +45,9 @@ export const GenesisState = {
         case 2:
           message.delegationLockList.push(DelegationLock.decode(reader, reader.uint32()));
           break;
+        case 3:
+          message.delegatedAmountList.push(DelegatedAmount.decode(reader, reader.uint32()));
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -56,6 +62,9 @@ export const GenesisState = {
       delegationLockList: Array.isArray(object?.delegationLockList)
         ? object.delegationLockList.map((e: any) => DelegationLock.fromJSON(e))
         : [],
+      delegatedAmountList: Array.isArray(object?.delegatedAmountList)
+        ? object.delegatedAmountList.map((e: any) => DelegatedAmount.fromJSON(e))
+        : [],
     };
   },
 
@@ -67,6 +76,11 @@ export const GenesisState = {
     } else {
       obj.delegationLockList = [];
     }
+    if (message.delegatedAmountList) {
+      obj.delegatedAmountList = message.delegatedAmountList.map((e) => e ? DelegatedAmount.toJSON(e) : undefined);
+    } else {
+      obj.delegatedAmountList = [];
+    }
     return obj;
   },
 
@@ -76,6 +90,7 @@ export const GenesisState = {
       ? Params.fromPartial(object.params)
       : undefined;
     message.delegationLockList = object.delegationLockList?.map((e) => DelegationLock.fromPartial(e)) || [];
+    message.delegatedAmountList = object.delegatedAmountList?.map((e) => DelegatedAmount.fromPartial(e)) || [];
     return message;
   },
 };

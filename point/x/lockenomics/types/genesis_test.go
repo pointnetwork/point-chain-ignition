@@ -49,6 +49,14 @@ func TestGenesisState_Validate(t *testing.T) {
 						Validator: "cosmosvaloper1qaa9zej9a0ge3ugpx3pxyx602lxh3ztqgfnp42",
 					},
 				},
+				DelegatedAmountList: []types.DelegatedAmount{
+					{
+						Index: "0",
+					},
+					{
+						Index: "1",
+					},
+				},
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
@@ -70,6 +78,20 @@ func TestGenesisState_Validate(t *testing.T) {
 						Length:    123534234,
 						Delegator: "cosmos1sjllsnramtg3ewxqwwrwjxfgc4n4ef9u0tvx7u",
 						Validator: "cosmosvaloper1sjllsnramtg3ewxqwwrwjxfgc4n4ef9u2lcnj0",
+					},
+				},
+			},
+			valid: false,
+		},
+		{
+			desc: "duplicated delegatedAmount",
+			genState: &types.GenesisState{
+				DelegatedAmountList: []types.DelegatedAmount{
+					{
+						Index: "0",
+					},
+					{
+						Index: "0",
 					},
 				},
 			},

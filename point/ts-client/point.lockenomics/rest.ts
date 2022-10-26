@@ -9,6 +9,16 @@
  * ---------------------------------------------------------------
  */
 
+export interface LockenomicsDelegatedAmount {
+  index?: string;
+  delegator?: string;
+  validator?: string;
+
+  /** @format uint64 */
+  amount?: string;
+  creator?: string;
+}
+
 export interface LockenomicsDelegationLock {
   index?: string;
 
@@ -21,12 +31,33 @@ export interface LockenomicsDelegationLock {
   validator?: string;
 }
 
+export type LockenomicsMsgCreateDelegatedAmountResponse = object;
+
 export type LockenomicsMsgCreateLockResponse = object;
+
+export type LockenomicsMsgDeleteDelegatedAmountResponse = object;
+
+export type LockenomicsMsgUpdateDelegatedAmountResponse = object;
 
 /**
  * Params defines the parameters for the module.
  */
 export type LockenomicsParams = object;
+
+export interface LockenomicsQueryAllDelegatedAmountResponse {
+  delegatedAmount?: LockenomicsDelegatedAmount[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
 
 export interface LockenomicsQueryAllDelegationLockResponse {
   delegationLock?: LockenomicsDelegationLock[];
@@ -41,6 +72,10 @@ export interface LockenomicsQueryAllDelegationLockResponse {
    *  }
    */
   pagination?: V1Beta1PageResponse;
+}
+
+export interface LockenomicsQueryGetDelegatedAmountResponse {
+  delegatedAmount?: LockenomicsDelegatedAmount;
 }
 
 export interface LockenomicsQueryGetDelegationLockResponse {
@@ -259,10 +294,52 @@ export class HttpClient<SecurityDataType = unknown> {
 }
 
 /**
- * @title point/lockenomics/delegation_lock.proto
+ * @title point/lockenomics/delegated_amount.proto
  * @version version not set
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryDelegatedAmountAll
+   * @summary Queries a list of DelegatedAmount items.
+   * @request GET:/point/lockenomics/delegated_amount
+   */
+  queryDelegatedAmountAll = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<LockenomicsQueryAllDelegatedAmountResponse, RpcStatus>({
+      path: `/point/lockenomics/delegated_amount`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryDelegatedAmount
+   * @summary Queries a DelegatedAmount by index.
+   * @request GET:/point/lockenomics/delegated_amount/{index}
+   */
+  queryDelegatedAmount = (index: string, params: RequestParams = {}) =>
+    this.request<LockenomicsQueryGetDelegatedAmountResponse, RpcStatus>({
+      path: `/point/lockenomics/delegated_amount/${index}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
   /**
    * No description
    *

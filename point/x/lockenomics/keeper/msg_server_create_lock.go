@@ -31,13 +31,12 @@ func (k msgServer) CreateLock(goCtx context.Context, msg *types.MsgCreateLock) (
 	now := time.Now().Unix()
 
 	if now < 0 {
-		return nil, types.ErrIntOverflowDelegationLock
+		return nil, types.ErrInvalidStartParams
 	}
 	nowUint := uint64(now)
-	lenghtInt64 := int64(msg.Lenght)
 
-	if lenghtInt64 < 0 {
-		return nil, types.ErrIntOverflowParams
+	if msg.Lenght < 0 {
+		return nil, types.ErrInvalidLengthParams
 	}
 	lengthUint := uint64(msg.Lenght)
 

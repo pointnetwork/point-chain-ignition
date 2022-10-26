@@ -31,6 +31,14 @@ func TestGenesis(t *testing.T) {
 				Validator: "cosmosvaloper14lultfckehtszvzw4ehu0apvsr77afvyju5zzy",
 			},
 		},
+		DelegatedAmountList: []types.DelegatedAmount{
+			{
+				Index: "0",
+			},
+			{
+				Index: "1",
+			},
+		},
 		// this line is used by starport scaffolding # genesis/test/state
 	}
 
@@ -43,5 +51,6 @@ func TestGenesis(t *testing.T) {
 	nullify.Fill(got)
 
 	require.ElementsMatch(t, genesisState.DelegationLockList, got.DelegationLockList)
+	require.ElementsMatch(t, genesisState.DelegatedAmountList, got.DelegatedAmountList)
 	// this line is used by starport scaffolding # genesis/test/assert
 }

@@ -1,10 +1,11 @@
 import { Client, registry, MissingWalletError } from 'point-client-ts'
 
+import { DelegatedAmount } from "point-client-ts/point.lockenomics/types"
 import { DelegationLock } from "point-client-ts/point.lockenomics/types"
 import { Params } from "point-client-ts/point.lockenomics/types"
 
 
-export { DelegationLock, Params };
+export { DelegatedAmount, DelegationLock, Params };
 
 function initClient(vuexGetters) {
 	return new Client(vuexGetters['common/env/getEnv'], vuexGetters['common/wallet/signer'])
@@ -38,8 +39,11 @@ const getDefaultState = () => {
 				Params: {},
 				DelegationLock: {},
 				DelegationLockAll: {},
+				DelegatedAmount: {},
+				DelegatedAmountAll: {},
 				
 				_Structure: {
+						DelegatedAmount: getStructure(DelegatedAmount.fromPartial({})),
 						DelegationLock: getStructure(DelegationLock.fromPartial({})),
 						Params: getStructure(Params.fromPartial({})),
 						
@@ -87,6 +91,18 @@ export default {
 						(<any> params).query=null
 					}
 			return state.DelegationLockAll[JSON.stringify(params)] ?? {}
+		},
+				getDelegatedAmount: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.DelegatedAmount[JSON.stringify(params)] ?? {}
+		},
+				getDelegatedAmountAll: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.DelegatedAmountAll[JSON.stringify(params)] ?? {}
 		},
 				
 		getTypeStructure: (state) => (type) => {
@@ -192,6 +208,93 @@ export default {
 		},
 		
 		
+		
+		
+		 		
+		
+		
+		async QueryDelegatedAmount({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const client = initClient(rootGetters);
+				let value= (await client.PointLockenomics.query.queryDelegatedAmount( key.index)).data
+				
+					
+				commit('QUERY', { query: 'DelegatedAmount', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryDelegatedAmount', payload: { options: { all }, params: {...key},query }})
+				return getters['getDelegatedAmount']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryDelegatedAmount API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QueryDelegatedAmountAll({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const client = initClient(rootGetters);
+				let value= (await client.PointLockenomics.query.queryDelegatedAmountAll(query ?? undefined)).data
+				
+					
+				while (all && (<any> value).pagination && (<any> value).pagination.next_key!=null) {
+					let next_values=(await client.PointLockenomics.query.queryDelegatedAmountAll({...query ?? {}, 'pagination.key':(<any> value).pagination.next_key} as any)).data
+					value = mergeResults(value, next_values);
+				}
+				commit('QUERY', { query: 'DelegatedAmountAll', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryDelegatedAmountAll', payload: { options: { all }, params: {...key},query }})
+				return getters['getDelegatedAmountAll']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryDelegatedAmountAll API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		async sendMsgCreateDelegatedAmount({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.PointLockenomics.tx.sendMsgCreateDelegatedAmount({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgCreateDelegatedAmount:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgCreateDelegatedAmount:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		async sendMsgUpdateDelegatedAmount({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.PointLockenomics.tx.sendMsgUpdateDelegatedAmount({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgUpdateDelegatedAmount:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgUpdateDelegatedAmount:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		async sendMsgDeleteDelegatedAmount({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.PointLockenomics.tx.sendMsgDeleteDelegatedAmount({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgDeleteDelegatedAmount:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgDeleteDelegatedAmount:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
 		async sendMsgCreateLock({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
@@ -206,6 +309,45 @@ export default {
 			}
 		},
 		
+		async MsgCreateDelegatedAmount({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.PointLockenomics.tx.msgCreateDelegatedAmount({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgCreateDelegatedAmount:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgCreateDelegatedAmount:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgUpdateDelegatedAmount({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.PointLockenomics.tx.msgUpdateDelegatedAmount({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgUpdateDelegatedAmount:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgUpdateDelegatedAmount:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgDeleteDelegatedAmount({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.PointLockenomics.tx.msgDeleteDelegatedAmount({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgDeleteDelegatedAmount:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgDeleteDelegatedAmount:Create Could not create message: ' + e.message)
+				}
+			}
+		},
 		async MsgCreateLock({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)

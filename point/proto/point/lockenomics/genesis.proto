@@ -4,6 +4,7 @@ package point.lockenomics;
 import "gogoproto/gogo.proto";
 import "point/lockenomics/params.proto";
 import "point/lockenomics/delegation_lock.proto";
+import "point/lockenomics/delegated_amount.proto";
 // this line is used by starport scaffolding # genesis/proto/import
 
 option go_package = "point/x/lockenomics/types";
@@ -12,5 +13,6 @@ option go_package = "point/x/lockenomics/types";
 message GenesisState {
   Params params = 1 [(gogoproto.nullable) = false];
   repeated DelegationLock delegationLockList = 2 [(gogoproto.nullable) = false];
+  repeated DelegatedAmount delegatedAmountList = 3 [(gogoproto.nullable) = false];
   // this line is used by starport scaffolding # genesis/proto/state
 }

@@ -1,6 +1,7 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
 import { PageRequest, PageResponse } from "../../cosmos/base/query/v1beta1/pagination";
+import { DelegatedAmount } from "./delegated_amount";
 import { DelegationLock } from "./delegation_lock";
 import { Params } from "./params";
 
@@ -30,6 +31,23 @@ export interface QueryAllDelegationLockRequest {
 
 export interface QueryAllDelegationLockResponse {
   delegationLock: DelegationLock[];
+  pagination: PageResponse | undefined;
+}
+
+export interface QueryGetDelegatedAmountRequest {
+  index: string;
+}
+
+export interface QueryGetDelegatedAmountResponse {
+  delegatedAmount: DelegatedAmount | undefined;
+}
+
+export interface QueryAllDelegatedAmountRequest {
+  pagination: PageRequest | undefined;
+}
+
+export interface QueryAllDelegatedAmountResponse {
+  delegatedAmount: DelegatedAmount[];
   pagination: PageResponse | undefined;
 }
 
@@ -345,6 +363,230 @@ export const QueryAllDelegationLockResponse = {
   },
 };
 
+function createBaseQueryGetDelegatedAmountRequest(): QueryGetDelegatedAmountRequest {
+  return { index: "" };
+}
+
+export const QueryGetDelegatedAmountRequest = {
+  encode(message: QueryGetDelegatedAmountRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.index !== "") {
+      writer.uint32(10).string(message.index);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryGetDelegatedAmountRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryGetDelegatedAmountRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.index = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetDelegatedAmountRequest {
+    return { index: isSet(object.index) ? String(object.index) : "" };
+  },
+
+  toJSON(message: QueryGetDelegatedAmountRequest): unknown {
+    const obj: any = {};
+    message.index !== undefined && (obj.index = message.index);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryGetDelegatedAmountRequest>, I>>(
+    object: I,
+  ): QueryGetDelegatedAmountRequest {
+    const message = createBaseQueryGetDelegatedAmountRequest();
+    message.index = object.index ?? "";
+    return message;
+  },
+};
+
+function createBaseQueryGetDelegatedAmountResponse(): QueryGetDelegatedAmountResponse {
+  return { delegatedAmount: undefined };
+}
+
+export const QueryGetDelegatedAmountResponse = {
+  encode(message: QueryGetDelegatedAmountResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.delegatedAmount !== undefined) {
+      DelegatedAmount.encode(message.delegatedAmount, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryGetDelegatedAmountResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryGetDelegatedAmountResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.delegatedAmount = DelegatedAmount.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetDelegatedAmountResponse {
+    return {
+      delegatedAmount: isSet(object.delegatedAmount) ? DelegatedAmount.fromJSON(object.delegatedAmount) : undefined,
+    };
+  },
+
+  toJSON(message: QueryGetDelegatedAmountResponse): unknown {
+    const obj: any = {};
+    message.delegatedAmount !== undefined
+      && (obj.delegatedAmount = message.delegatedAmount ? DelegatedAmount.toJSON(message.delegatedAmount) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryGetDelegatedAmountResponse>, I>>(
+    object: I,
+  ): QueryGetDelegatedAmountResponse {
+    const message = createBaseQueryGetDelegatedAmountResponse();
+    message.delegatedAmount = (object.delegatedAmount !== undefined && object.delegatedAmount !== null)
+      ? DelegatedAmount.fromPartial(object.delegatedAmount)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryAllDelegatedAmountRequest(): QueryAllDelegatedAmountRequest {
+  return { pagination: undefined };
+}
+
+export const QueryAllDelegatedAmountRequest = {
+  encode(message: QueryAllDelegatedAmountRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.pagination !== undefined) {
+      PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryAllDelegatedAmountRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryAllDelegatedAmountRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.pagination = PageRequest.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllDelegatedAmountRequest {
+    return { pagination: isSet(object.pagination) ? PageRequest.fromJSON(object.pagination) : undefined };
+  },
+
+  toJSON(message: QueryAllDelegatedAmountRequest): unknown {
+    const obj: any = {};
+    message.pagination !== undefined
+      && (obj.pagination = message.pagination ? PageRequest.toJSON(message.pagination) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryAllDelegatedAmountRequest>, I>>(
+    object: I,
+  ): QueryAllDelegatedAmountRequest {
+    const message = createBaseQueryAllDelegatedAmountRequest();
+    message.pagination = (object.pagination !== undefined && object.pagination !== null)
+      ? PageRequest.fromPartial(object.pagination)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryAllDelegatedAmountResponse(): QueryAllDelegatedAmountResponse {
+  return { delegatedAmount: [], pagination: undefined };
+}
+
+export const QueryAllDelegatedAmountResponse = {
+  encode(message: QueryAllDelegatedAmountResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.delegatedAmount) {
+      DelegatedAmount.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.pagination !== undefined) {
+      PageResponse.encode(message.pagination, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryAllDelegatedAmountResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryAllDelegatedAmountResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.delegatedAmount.push(DelegatedAmount.decode(reader, reader.uint32()));
+          break;
+        case 2:
+          message.pagination = PageResponse.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllDelegatedAmountResponse {
+    return {
+      delegatedAmount: Array.isArray(object?.delegatedAmount)
+        ? object.delegatedAmount.map((e: any) => DelegatedAmount.fromJSON(e))
+        : [],
+      pagination: isSet(object.pagination) ? PageResponse.fromJSON(object.pagination) : undefined,
+    };
+  },
+
+  toJSON(message: QueryAllDelegatedAmountResponse): unknown {
+    const obj: any = {};
+    if (message.delegatedAmount) {
+      obj.delegatedAmount = message.delegatedAmount.map((e) => e ? DelegatedAmount.toJSON(e) : undefined);
+    } else {
+      obj.delegatedAmount = [];
+    }
+    message.pagination !== undefined
+      && (obj.pagination = message.pagination ? PageResponse.toJSON(message.pagination) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryAllDelegatedAmountResponse>, I>>(
+    object: I,
+  ): QueryAllDelegatedAmountResponse {
+    const message = createBaseQueryAllDelegatedAmountResponse();
+    message.delegatedAmount = object.delegatedAmount?.map((e) => DelegatedAmount.fromPartial(e)) || [];
+    message.pagination = (object.pagination !== undefined && object.pagination !== null)
+      ? PageResponse.fromPartial(object.pagination)
+      : undefined;
+    return message;
+  },
+};
+
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
@@ -353,6 +595,10 @@ export interface Query {
   DelegationLock(request: QueryGetDelegationLockRequest): Promise<QueryGetDelegationLockResponse>;
   /** Queries a list of DelegationLock items. */
   DelegationLockAll(request: QueryAllDelegationLockRequest): Promise<QueryAllDelegationLockResponse>;
+  /** Queries a DelegatedAmount by index. */
+  DelegatedAmount(request: QueryGetDelegatedAmountRequest): Promise<QueryGetDelegatedAmountResponse>;
+  /** Queries a list of DelegatedAmount items. */
+  DelegatedAmountAll(request: QueryAllDelegatedAmountRequest): Promise<QueryAllDelegatedAmountResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -362,6 +608,8 @@ export class QueryClientImpl implements Query {
     this.Params = this.Params.bind(this);
     this.DelegationLock = this.DelegationLock.bind(this);
     this.DelegationLockAll = this.DelegationLockAll.bind(this);
+    this.DelegatedAmount = this.DelegatedAmount.bind(this);
+    this.DelegatedAmountAll = this.DelegatedAmountAll.bind(this);
   }
   Params(request: QueryParamsRequest): Promise<QueryParamsResponse> {
     const data = QueryParamsRequest.encode(request).finish();
@@ -379,6 +627,18 @@ export class QueryClientImpl implements Query {
     const data = QueryAllDelegationLockRequest.encode(request).finish();
     const promise = this.rpc.request("point.lockenomics.Query", "DelegationLockAll", data);
     return promise.then((data) => QueryAllDelegationLockResponse.decode(new _m0.Reader(data)));
+  }
+
+  DelegatedAmount(request: QueryGetDelegatedAmountRequest): Promise<QueryGetDelegatedAmountResponse> {
+    const data = QueryGetDelegatedAmountRequest.encode(request).finish();
+    const promise = this.rpc.request("point.lockenomics.Query", "DelegatedAmount", data);
+    return promise.then((data) => QueryGetDelegatedAmountResponse.decode(new _m0.Reader(data)));
+  }
+
+  DelegatedAmountAll(request: QueryAllDelegatedAmountRequest): Promise<QueryAllDelegatedAmountResponse> {
+    const data = QueryAllDelegatedAmountRequest.encode(request).finish();
+    const promise = this.rpc.request("point.lockenomics.Query", "DelegatedAmountAll", data);
+    return promise.then((data) => QueryAllDelegatedAmountResponse.decode(new _m0.Reader(data)));
   }
 }
 

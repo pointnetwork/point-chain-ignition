@@ -12,6 +12,10 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	for _, elem := range genState.DelegationLockList {
 		k.SetDelegationLock(ctx, elem)
 	}
+	// Set all the delegatedAmount
+	for _, elem := range genState.DelegatedAmountList {
+		k.SetDelegatedAmount(ctx, elem)
+	}
 	// this line is used by starport scaffolding # genesis/module/init
 	k.SetParams(ctx, genState.Params)
 }
@@ -22,6 +26,7 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis.Params = k.GetParams(ctx)
 
 	genesis.DelegationLockList = k.GetAllDelegationLock(ctx)
+	genesis.DelegatedAmountList = k.GetAllDelegatedAmount(ctx)
 	// this line is used by starport scaffolding # genesis/module/export
 
 	return genesis

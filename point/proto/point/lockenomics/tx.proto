@@ -1,6 +1,7 @@
 syntax = "proto3";
 package point.lockenomics;
 
+import "point/lockenomics/delegated_amount.proto";
 // this line is used by starport scaffolding # proto/tx/import
 
 option go_package = "point/x/lockenomics/types";
@@ -8,6 +9,9 @@ option go_package = "point/x/lockenomics/types";
 // Msg defines the Msg service.
 service Msg {
       rpc CreateLock(MsgCreateLock) returns (MsgCreateLockResponse);
+  rpc CreateDelegatedAmount(MsgCreateDelegatedAmount) returns (MsgCreateDelegatedAmountResponse);
+  rpc UpdateDelegatedAmount(MsgUpdateDelegatedAmount) returns (MsgUpdateDelegatedAmountResponse);
+  rpc DeleteDelegatedAmount(MsgDeleteDelegatedAmount) returns (MsgDeleteDelegatedAmountResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -19,5 +23,31 @@ message MsgCreateLock {
 
 message MsgCreateLockResponse {
 }
+
+message MsgCreateDelegatedAmount {
+  string creator = 1;
+  string index = 2;
+
+  string delegator = 3;
+  string validator = 4;
+  uint64 amount = 5;
+}
+message MsgCreateDelegatedAmountResponse {}
+
+message MsgUpdateDelegatedAmount {
+  string creator = 1;
+  string index = 2;
+
+  string delegator = 3;
+  string validator = 4;
+  uint64 amount = 5;
+}
+message MsgUpdateDelegatedAmountResponse {}
+
+message MsgDeleteDelegatedAmount {
+  string creator = 1;
+  string index = 2;
+}
+message MsgDeleteDelegatedAmountResponse {}
 
 // this line is used by starport scaffolding # proto/tx/message

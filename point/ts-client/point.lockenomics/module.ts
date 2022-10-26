@@ -7,10 +7,31 @@ import { msgTypes } from './registry';
 import { IgniteClient } from "../client"
 import { MissingWalletError } from "../helpers"
 import { Api } from "./rest";
+import { MsgCreateDelegatedAmount } from "./types/point/lockenomics/tx";
+import { MsgUpdateDelegatedAmount } from "./types/point/lockenomics/tx";
+import { MsgDeleteDelegatedAmount } from "./types/point/lockenomics/tx";
 import { MsgCreateLock } from "./types/point/lockenomics/tx";
 
 
-export { MsgCreateLock };
+export { MsgCreateDelegatedAmount, MsgUpdateDelegatedAmount, MsgDeleteDelegatedAmount, MsgCreateLock };
+
+type sendMsgCreateDelegatedAmountParams = {
+  value: MsgCreateDelegatedAmount,
+  fee?: StdFee,
+  memo?: string
+};
+
+type sendMsgUpdateDelegatedAmountParams = {
+  value: MsgUpdateDelegatedAmount,
+  fee?: StdFee,
+  memo?: string
+};
+
+type sendMsgDeleteDelegatedAmountParams = {
+  value: MsgDeleteDelegatedAmount,
+  fee?: StdFee,
+  memo?: string
+};
 
 type sendMsgCreateLockParams = {
   value: MsgCreateLock,
@@ -18,6 +39,18 @@ type sendMsgCreateLockParams = {
   memo?: string
 };
 
+
+type msgCreateDelegatedAmountParams = {
+  value: MsgCreateDelegatedAmount,
+};
+
+type msgUpdateDelegatedAmountParams = {
+  value: MsgUpdateDelegatedAmount,
+};
+
+type msgDeleteDelegatedAmountParams = {
+  value: MsgDeleteDelegatedAmount,
+};
 
 type msgCreateLockParams = {
   value: MsgCreateLock,
@@ -41,6 +74,48 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 
   return {
 		
+		async sendMsgCreateDelegatedAmount({ value, fee, memo }: sendMsgCreateDelegatedAmountParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgCreateDelegatedAmount: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgCreateDelegatedAmount({ value: MsgCreateDelegatedAmount.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgCreateDelegatedAmount: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgUpdateDelegatedAmount({ value, fee, memo }: sendMsgUpdateDelegatedAmountParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgUpdateDelegatedAmount: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgUpdateDelegatedAmount({ value: MsgUpdateDelegatedAmount.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgUpdateDelegatedAmount: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgDeleteDelegatedAmount({ value, fee, memo }: sendMsgDeleteDelegatedAmountParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgDeleteDelegatedAmount: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgDeleteDelegatedAmount({ value: MsgDeleteDelegatedAmount.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgDeleteDelegatedAmount: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
 		async sendMsgCreateLock({ value, fee, memo }: sendMsgCreateLockParams): Promise<DeliverTxResponse> {
 			if (!signer) {
 					throw new Error('TxClient:sendMsgCreateLock: Unable to sign Tx. Signer is not present.')
@@ -55,6 +130,30 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
+		
+		msgCreateDelegatedAmount({ value }: msgCreateDelegatedAmountParams): EncodeObject {
+			try {
+				return { typeUrl: "/point.lockenomics.MsgCreateDelegatedAmount", value: MsgCreateDelegatedAmount.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgCreateDelegatedAmount: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgUpdateDelegatedAmount({ value }: msgUpdateDelegatedAmountParams): EncodeObject {
+			try {
+				return { typeUrl: "/point.lockenomics.MsgUpdateDelegatedAmount", value: MsgUpdateDelegatedAmount.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgUpdateDelegatedAmount: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgDeleteDelegatedAmount({ value }: msgDeleteDelegatedAmountParams): EncodeObject {
+			try {
+				return { typeUrl: "/point.lockenomics.MsgDeleteDelegatedAmount", value: MsgDeleteDelegatedAmount.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgDeleteDelegatedAmount: Could not create message: ' + e.message)
+			}
+		},
 		
 		msgCreateLock({ value }: msgCreateLockParams): EncodeObject {
 			try {
