@@ -2,6 +2,7 @@ package types
 
 import (
 	"encoding/binary"
+	"encoding/hex"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/address"
 )
@@ -24,6 +25,12 @@ func DelegatedAmountKey(
 	key = append(key, []byte("/")...)
 
 	return key
+}
+
+// GetDelegationKey creates the key for delegator bond with validator
+func GetDelegatedAmountKeyStringFromString(delegator string, validator string) (key string, err error) {
+	keyBytes, err := GetDelegatedAmountKeyFromString(delegator, validator)
+	return hex.EncodeToString(keyBytes), err
 }
 
 // GetDelegationKey creates the key for delegator bond with validator

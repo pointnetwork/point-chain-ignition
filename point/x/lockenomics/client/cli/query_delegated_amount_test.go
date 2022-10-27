@@ -27,9 +27,31 @@ func networkWithDelegatedAmountObjects(t *testing.T, n int) (*network.Network, [
 	state := types.GenesisState{}
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
+	delegators := [7]string{"cosmos156gqf9837u7d4c4678yt3rl4ls9c5vuuxyhkw6",
+		"cosmos14lultfckehtszvzw4ehu0apvsr77afvyhgqhwh",
+		"cosmos19lss6zgdh5vvcpjhfftdghrpsw7a4434ut4md0",
+		"cosmos196ax4vc0lwpxndu9dyhvca7jhxp70rmcfhxsrt",
+		"cosmos1z8zjv3lntpwxua0rtpvgrcwl0nm0tltgyuy0nd",
+		"cosmos1qaa9zej9a0ge3ugpx3pxyx602lxh3ztqda85ee",
+		"cosmos1tflk30mq5vgqjdly92kkhhq3raev2hnzldd74z",
+	}
+	validators := [7]string{"cosmosvaloper156gqf9837u7d4c4678yt3rl4ls9c5vuursrrzf",
+		"cosmosvaloper14lultfckehtszvzw4ehu0apvsr77afvyju5zzy",
+		"cosmosvaloper19lss6zgdh5vvcpjhfftdghrpsw7a4434elpwpu",
+		"cosmosvaloper196ax4vc0lwpxndu9dyhvca7jhxp70rmcvrj90c",
+		"cosmosvaloper1z8zjv3lntpwxua0rtpvgrcwl0nm0tltgpgs6l7",
+		"cosmosvaloper1qaa9zej9a0ge3ugpx3pxyx602lxh3ztqgfnp42",
+		"cosmosvaloper1tflk30mq5vgqjdly92kkhhq3raev2hnz6eete3",
+	}
+
 	for i := 0; i < n; i++ {
+		key, _ := types.GetDelegatedAmountKeyStringFromString(delegators[i], validators[i])
 		delegatedAmount := types.DelegatedAmount{
-			Index: strconv.Itoa(i),
+			Index:     key,
+			Delegator: delegators[i],
+			Validator: validators[i],
+			Amount:    12387,
+			Creator:   delegators[i],
 		}
 		nullify.Fill(&delegatedAmount)
 		state.DelegatedAmountList = append(state.DelegatedAmountList, delegatedAmount)
