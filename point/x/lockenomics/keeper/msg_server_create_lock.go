@@ -31,7 +31,7 @@ func (k msgServer) CreateLock(goCtx context.Context, msg *types.MsgCreateLock) (
 	now := time.Now().Unix()
 
 	if now < 0 {
-		return nil, types.ErrInvalidStartParams
+		return nil, types.ErrIntOverflowParams
 	}
 	nowUint := uint64(now)
 

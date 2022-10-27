@@ -75468,13 +75468,7 @@ definitions:
         type: string
       validator:
         type: string
-  point.lockenomics.MsgCreateDelegatedAmountResponse:
-    type: object
   point.lockenomics.MsgCreateLockResponse:
-    type: object
-  point.lockenomics.MsgDeleteDelegatedAmountResponse:
-    type: object
-  point.lockenomics.MsgUpdateDelegatedAmountResponse:
     type: object
   point.lockenomics.Params:
     type: object

@@ -31,13 +31,7 @@ export interface LockenomicsDelegationLock {
   validator?: string;
 }
 
-export type LockenomicsMsgCreateDelegatedAmountResponse = object;
-
 export type LockenomicsMsgCreateLockResponse = object;
-
-export type LockenomicsMsgDeleteDelegatedAmountResponse = object;
-
-export type LockenomicsMsgUpdateDelegatedAmountResponse = object;
 
 /**
  * Params defines the parameters for the module.
