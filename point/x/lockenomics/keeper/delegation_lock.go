@@ -8,16 +8,18 @@ import (
 )
 
 // SetDelegationLock set a specific delegationLock in the store from its index
-func (k Keeper) SetDelegationLock(ctx sdk.Context, delegationLock types.DelegationLock) {
+func (k Keeper) SetDelegationLock(ctx sdk.Context, delegationLock types.DelegationLock) error {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.DelegationLockKeyPrefix))
-	b := k.cdc.MustMarshal(&delegationLock)
 	delegatorAddress := sdk.MustAccAddressFromBech32(delegationLock.Delegator)
 	validatorAddress, err := sdk.ValAddressFromBech32(delegationLock.Validator)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	key := types.GetDelegationLockKey(delegatorAddress, validatorAddress)
+	delegationLock.Index = hex.EncodeToString(key)
+	b := k.cdc.MustMarshal(&delegationLock)
 	store.Set(key, b)
+	return nil
 }
 
 // GetDelegationLock returns a delegationLock by Delegator And Validator

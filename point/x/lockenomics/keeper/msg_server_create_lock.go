@@ -50,7 +50,7 @@ func (k msgServer) CreateLock(goCtx context.Context, msg *types.MsgCreateLock) (
 		Validator: msg.Validator,
 	}
 
-	k.Keeper.SetDelegationLock(ctx, delegationLock)
+	err = k.Keeper.SetDelegationLock(ctx, delegationLock)
 	if err != nil {
 		return nil, err
 	}

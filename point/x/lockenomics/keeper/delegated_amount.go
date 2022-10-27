@@ -7,12 +7,18 @@ import (
 )
 
 // SetDelegatedAmount set a specific delegatedAmount in the store from its index
-func (k Keeper) SetDelegatedAmount(ctx sdk.Context, delegatedAmount types.DelegatedAmount) {
+func (k Keeper) SetDelegatedAmount(ctx sdk.Context, delegatedAmount types.DelegatedAmount) error {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.DelegatedAmountKeyPrefix))
+	index, err := types.GetDelegatedAmountKeyStringFromString(delegatedAmount.Delegator, delegatedAmount.Validator)
+	if err != nil {
+		return err
+	}
+	delegatedAmount.Index = index
 	b := k.cdc.MustMarshal(&delegatedAmount)
 	store.Set(types.DelegatedAmountKey(
 		delegatedAmount.Index,
 	), b)
+	return nil
 }
 
 // GetDelegatedAmount returns a delegatedAmount from its index
