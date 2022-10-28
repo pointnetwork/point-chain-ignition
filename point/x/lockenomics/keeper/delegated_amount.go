@@ -25,13 +25,13 @@ func (k Keeper) SetDelegatedAmount(ctx sdk.Context, delegatedAmount types.Delega
 func (k Keeper) GetDelegatedAmount(
 	ctx sdk.Context,
 	index string,
-
 ) (val types.DelegatedAmount, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.DelegatedAmountKeyPrefix))
-
-	b := store.Get(types.DelegatedAmountKey(
-		index,
-	))
+	keyBytes := types.DelegatedAmountKey(index)
+	if keyBytes == nil {
+		return val, false
+	}
+	b := store.Get(keyBytes)
 	if b == nil {
 		return val, false
 	}
