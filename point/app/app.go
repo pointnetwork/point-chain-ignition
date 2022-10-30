@@ -420,10 +420,26 @@ func New(
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 
+	app.LockenomicsKeeper = *lockenomicsmodulekeeper.NewKeeper(
+		appCodec,
+		keys[lockenomicsmoduletypes.StoreKey],
+		keys[lockenomicsmoduletypes.MemStoreKey],
+		app.GetSubspace(lockenomicsmoduletypes.ModuleName),
+
+		app.AccountKeeper,
+		app.DistrKeeper,
+		app.SlashingKeeper,
+		app.StakingKeeper,
+	)
+	lockenomicsModule := lockenomicsmodule.NewAppModule(appCodec, app.LockenomicsKeeper, app.AccountKeeper, app.BankKeeper)
+
 	// register the staking hooks
 	// NOTE: stakingKeeper above is passed by reference, so that it will contain these hooks
 	app.StakingKeeper = *stakingKeeper.SetHooks(
-		stakingtypes.NewMultiStakingHooks(app.DistrKeeper.Hooks(), app.SlashingKeeper.Hooks(), app.LockenomicsKeeper.Hooks()),
+		stakingtypes.NewMultiStakingHooks(
+			app.DistrKeeper.Hooks(),
+			app.SlashingKeeper.Hooks(),
+			app.LockenomicsKeeper.Hooks()),
 	)
 
 	// ... other modules keepers
@@ -501,19 +517,6 @@ func New(
 		app.MsgServiceRouter(),
 		govConfig,
 	)
-
-	app.LockenomicsKeeper = *lockenomicsmodulekeeper.NewKeeper(
-		appCodec,
-		keys[lockenomicsmoduletypes.StoreKey],
-		keys[lockenomicsmoduletypes.MemStoreKey],
-		app.GetSubspace(lockenomicsmoduletypes.ModuleName),
-
-		app.AccountKeeper,
-		app.DistrKeeper,
-		app.SlashingKeeper,
-		app.StakingKeeper,
-	)
-	lockenomicsModule := lockenomicsmodule.NewAppModule(appCodec, app.LockenomicsKeeper, app.AccountKeeper, app.BankKeeper)
 
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
