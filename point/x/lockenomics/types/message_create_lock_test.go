@@ -25,6 +25,13 @@ func TestMsgCreateLock_ValidateBasic(t *testing.T) {
 			msg: MsgCreateLock{
 				Creator: sample.AccAddress(),
 			},
+		}, {
+			name: "delegation is too long",
+			msg: MsgCreateLock{
+				Creator: sample.AccAddress(),
+				Lenght:  MaxDelegationLength + 1,
+			},
+			err: ErrTooLongDelegation,
 		},
 	}
 	for _, tt := range tests {

@@ -43,5 +43,8 @@ func (msg *MsgCreateLock) ValidateBasic() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
+	if msg.Lenght > MaxDelegationLength {
+		return ErrTooLongDelegation
+	}
 	return nil
 }
