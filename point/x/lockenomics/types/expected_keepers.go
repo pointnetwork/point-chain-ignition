@@ -31,3 +31,8 @@ type BankKeeper interface {
 	SpendableCoins(ctx sdk.Context, addr sdk.AccAddress) sdk.Coins
 	// Methods imported from bank should be defined here
 }
+
+// StakingHooks event hooks for staking validator object (noalias)
+type StakingHooks interface {
+	AfterDelegationModified(ctx sdk.Context, delAddr sdk.AccAddress, valAddr sdk.ValAddress)
+}

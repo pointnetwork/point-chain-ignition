@@ -429,7 +429,7 @@ func New(
 		app.AccountKeeper,
 		app.DistrKeeper,
 		app.SlashingKeeper,
-		app.StakingKeeper,
+		stakingKeeper,
 	)
 	lockenomicsModule := lockenomicsmodule.NewAppModule(appCodec, app.LockenomicsKeeper, app.AccountKeeper, app.BankKeeper)
 

@@ -6,14 +6,12 @@ import (
 	"point/x/lockenomics/types"
 )
 
-var (
-	_ stakingTypes.StakingHooks = Hooks{}
-)
-
 // Hooks wrapper struct for the lockenomics keeper
 type Hooks struct {
 	k Keeper
 }
+
+var _ stakingTypes.StakingHooks = Hooks{}
 
 // Return the wrapper struct
 func (k Keeper) Hooks() Hooks {
@@ -57,10 +55,8 @@ func (h Hooks) BeforeValidatorSlashed(ctx sdk.Context, valAddr sdk.ValAddress, f
 // AfterDelegationModified is a wrapper for calling the Staking AfterDelegationModified
 // hook on the module keeper
 func (h Hooks) AfterDelegationModified(ctx sdk.Context, delAddr sdk.AccAddress, valAddr sdk.ValAddress) error {
+
 	delegation, found := h.k.stakingKeeper.GetDelegation(ctx, delAddr, valAddr)
-	if !found {
-		return stakingTypes.ErrNoDelegation
-	}
 
 	if !delegation.Shares.IsPositive() {
 		return stakingTypes.ErrNoDelegation

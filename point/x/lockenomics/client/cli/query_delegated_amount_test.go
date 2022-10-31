@@ -136,7 +136,7 @@ func TestListDelegatedAmount(t *testing.T) {
 		return args
 	}
 	t.Run("ByOffset", func(t *testing.T) {
-		step := 2
+		step := 7
 		for i := 0; i < len(objs); i += step {
 			args := request(nil, uint64(i), uint64(step), false)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListDelegatedAmount(), args)
@@ -145,13 +145,13 @@ func TestListDelegatedAmount(t *testing.T) {
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			require.LessOrEqual(t, len(resp.DelegatedAmount), step)
 			require.Subset(t,
-				nullify.Fill(objs),
 				nullify.Fill(resp.DelegatedAmount),
+				nullify.Fill(objs),
 			)
 		}
 	})
 	t.Run("ByKey", func(t *testing.T) {
-		step := 2
+		step := 7
 		var next []byte
 		for i := 0; i < len(objs); i += step {
 			args := request(next, 0, uint64(step), false)
@@ -161,23 +161,24 @@ func TestListDelegatedAmount(t *testing.T) {
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			require.LessOrEqual(t, len(resp.DelegatedAmount), step)
 			require.Subset(t,
-				nullify.Fill(objs),
 				nullify.Fill(resp.DelegatedAmount),
+				nullify.Fill(objs),
 			)
 			next = resp.Pagination.NextKey
 		}
 	})
 	t.Run("Total", func(t *testing.T) {
-		args := request(nil, 0, uint64(len(objs)), true)
+		args := request(nil, 0, uint64(len(objs)+1), true)
 		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListDelegatedAmount(), args)
 		require.NoError(t, err)
 		var resp types.QueryAllDelegatedAmountResponse
 		require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 		require.NoError(t, err)
-		require.Equal(t, len(objs), int(resp.Pagination.Total))
-		require.ElementsMatch(t,
-			nullify.Fill(objs),
+		//Adding 1 to number of objects because 1 additional entity was generated during test network validator initialization
+		require.Equal(t, len(objs)+1, int(resp.Pagination.Total))
+		require.Subset(t,
 			nullify.Fill(resp.DelegatedAmount),
+			nullify.Fill(objs),
 		)
 	})
 }
