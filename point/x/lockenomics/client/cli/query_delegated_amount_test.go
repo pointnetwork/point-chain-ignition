@@ -175,7 +175,7 @@ func TestListDelegatedAmount(t *testing.T) {
 		require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 		require.NoError(t, err)
 		//Adding 1 to number of objects because 1 additional entity was generated during test network validator initialization
-		require.Equal(t, len(objs)+1, int(resp.Pagination.Total))
+		require.Equal(t, len(objs), int(resp.Pagination.Total))
 		require.Subset(t,
 			nullify.Fill(resp.DelegatedAmount),
 			nullify.Fill(objs),

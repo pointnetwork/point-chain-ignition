@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"encoding/hex"
 	stakingTypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"time"
 
@@ -40,10 +39,10 @@ func (k msgServer) CreateLock(goCtx context.Context, msg *types.MsgCreateLock) (
 	}
 	lengthUint := uint64(msg.Lenght)
 
-	key := types.GetDelegationLockKey(delAddress, valAddr)
+	key := types.GetDelegationLockKeyString(delAddress, valAddr)
 
 	delegationLock := types.DelegationLock{
-		Index:     hex.EncodeToString(key),
+		Index:     key,
 		Start:     nowUint,
 		Length:    lengthUint,
 		Delegator: msg.Creator,

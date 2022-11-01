@@ -22,12 +22,11 @@ func (k Keeper) SetDelegatedAmount(ctx sdk.Context, delegatedAmount types.Delega
 }
 
 // GetDelegatedAmount returns a delegatedAmount from its index
-func (k Keeper) GetDelegatedAmount(
+func (k Keeper) GetDelegatedAmountFromKeyBytes(
 	ctx sdk.Context,
-	index string,
+	keyBytes []byte,
 ) (val types.DelegatedAmount, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.DelegatedAmountKeyPrefix))
-	keyBytes := types.DelegatedAmountKey(index)
 	if keyBytes == nil {
 		return val, false
 	}
@@ -38,6 +37,15 @@ func (k Keeper) GetDelegatedAmount(
 
 	k.cdc.MustUnmarshal(b, &val)
 	return val, true
+}
+
+// GetDelegatedAmount returns a delegatedAmount from its index
+func (k Keeper) GetDelegatedAmount(
+	ctx sdk.Context,
+	index string,
+) (val types.DelegatedAmount, found bool) {
+	keyBytes := types.DelegatedAmountKey(index)
+	return k.GetDelegatedAmountFromKeyBytes(ctx, keyBytes)
 }
 
 // RemoveDelegatedAmount removes a delegatedAmount from the store

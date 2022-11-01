@@ -67,15 +67,18 @@ func (h Hooks) AfterDelegationModified(ctx sdk.Context, delAddr sdk.AccAddress, 
 		return stakingTypes.ErrNoValidatorFound
 	}
 
-	tokens := validator.TokensFromShares(delegation.Shares)
-
-	delegatedAmount := types.DelegatedAmount{
-		Delegator: delAddr.String(),
-		Validator: valAddr.String(),
-		Amount:    uint64(tokens.RoundInt64()),
+	if !found {
+		tokens := validator.TokensFromShares(delegation.Shares)
+		var amount uint64 = 0
+		if tokens.IsPositive() {
+			amount = tokens.BigInt().Uint64()
+		}
+		delegatedAmount := types.DelegatedAmount{
+			Delegator: delAddr.String(),
+			Validator: valAddr.String(),
+			Amount:    amount,
+		}
+		h.k.SetDelegatedAmount(ctx, delegatedAmount)
 	}
-
-	h.k.SetDelegatedAmount(ctx, delegatedAmount)
-
 	return nil
 }

@@ -1,7 +1,6 @@
 package keeper_test
 
 import (
-	"encoding/hex"
 	"strconv"
 	"testing"
 	"time"
@@ -38,8 +37,7 @@ func createNDelegationLock(keeper *keeper.Keeper, ctx sdk.Context, n int) []type
 	for i := range items {
 		delegAddr, _ := sdk.AccAddressFromBech32(delegators[i])
 		valAddr, _ := sdk.ValAddressFromBech32(validators[i])
-		key := types.GetDelegationLockKey(delegAddr, valAddr)
-		items[i].Index = hex.EncodeToString(key)
+		items[i].Index = types.GetDelegationLockKeyString(delegAddr, valAddr)
 		items[i].Delegator = delegators[i]
 		items[i].Validator = validators[i]
 		items[i].Start = uint64(time.Now().Unix())

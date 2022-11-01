@@ -1,7 +1,6 @@
 package cli_test
 
 import (
-	"encoding/hex"
 	"fmt"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"strconv"
@@ -51,8 +50,8 @@ func networkWithDelegationLockObjects(t *testing.T, n int) (*network.Network, []
 	for i := 0; i < len(delegators); i++ {
 		delegator, _ := sdk.AccAddressFromBech32(delegators[i])
 		validator, _ := sdk.ValAddressFromBech32(validators[i])
-		keyBytes := types.GetDelegationLockKey(delegator, validator)
-		indexes[i] = hex.EncodeToString(keyBytes)
+		key := types.GetDelegationLockKeyString(delegator, validator)
+		indexes[i] = key
 	}
 
 	for i := 0; i < n; i++ {

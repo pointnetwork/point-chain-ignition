@@ -1,7 +1,6 @@
 package types_test
 
 import (
-	"encoding/hex"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"testing"
 	"time"
@@ -13,11 +12,11 @@ import (
 func TestGenesisState_Validate(t *testing.T) {
 	delegatorAddr, _ := sdk.AccAddressFromBech32("cosmos1sjllsnramtg3ewxqwwrwjxfgc4n4ef9u0tvx7u")
 	validatorAddr, _ := sdk.ValAddressFromBech32("cosmosvaloper1sjllsnramtg3ewxqwwrwjxfgc4n4ef9u2lcnj0")
-	index1 := hex.EncodeToString(types.GetDelegationLockKey(delegatorAddr, validatorAddr))
+	index1 := types.GetDelegationLockKeyString(delegatorAddr, validatorAddr)
 
 	delegatorAddr2, _ := sdk.AccAddressFromBech32("cosmos14lultfckehtszvzw4ehu0apvsr77afvyhgqhwh")
 	validatorAddr2, _ := sdk.ValAddressFromBech32("cosmosvaloper1qaa9zej9a0ge3ugpx3pxyx602lxh3ztqgfnp42")
-	index2 := hex.EncodeToString(types.GetDelegationLockKey(delegatorAddr2, validatorAddr2))
+	index2 := types.GetDelegationLockKeyString(delegatorAddr2, validatorAddr2)
 
 	for _, tc := range []struct {
 		desc     string
